@@ -1,60 +1,9 @@
 import SubCategory from "../models/SubCategory.js";
 
-import multer from "multer";
-import path from "path";
-
-//  Storage Config
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        if (file.fieldname === "photo") {
-            cb(null, "uploads/photo/");
-        } else if (file.fieldname === "banner") {
-            cb(null, "uploads/banner/");
-        }
-    },
-    filename: (req, file, cb) => {
-        const ext = path.extname(file.originalname);
-        const name = Date.now() + "-" + file.fieldname + ext;
-        cb(null, name);
-    }
-});
-
-//  File Filter
-const fileFilter = (req, file, cb) => {
-    if (file.fieldname === "photo" && !file.mimetype.startsWith("image/")) {
-        return cb(new Error("Only image allowed"), false);
-    }
-    if (file.fieldname === "banner" && !file.mimetype.startsWith("image/")) {
-        return cb(new Error("Only image allowed"), false);
-    }
-    cb(null, true);
-};
-
-//  Multer Upload
-export const upload = multer({
-    storage,
-    limits: { fileSize: 50 * 1024 * 1024 }, // 50MB
-    fileFilter
-});
-
 //  Create SubCategory API
 export const createSubCategory = async (req, res) => {
     try {
         let body = { ...req.body };
-
-        if (req.files) {
-            const baseUrl = req.protocol + "://" + req.get("host");
-
-            if (req.files.photo) {
-                body.photo =
-                    baseUrl + "/" + req.files.photo[0].path.replace(/\\/g, "/");
-            }
-
-            if (req.files.banner) {
-                body.banner =
-                    baseUrl + "/" + req.files.banner[0].path.replace(/\\/g, "/");
-            }
-        }
 
         const subcategory = new SubCategory(body);
         const saved = await subcategory.save();
@@ -170,19 +119,6 @@ export const updateSubCategory = async (req, res) => {
     try {
         let body = { ...req.body };
 
-        if (req.files) {
-            const baseUrl = req.protocol + "://" + req.get("host");
-
-            if (req.files.photo) {
-                body.photo =
-                    baseUrl + "/" + req.files.photo[0].path.replace(/\\/g, "/");
-            }
-
-            if (req.files.banner) {
-                body.banner =
-                    baseUrl + "/" + req.files.banner[0].path.replace(/\\/g, "/");
-            }
-        }
         const updated = await SubCategory.findByIdAndUpdate(
             req.params.id,
             body,

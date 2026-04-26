@@ -10,8 +10,6 @@ const SubCategorySchema = new mongoose.Schema({
     name: { type: String, trim: true },
     slug: { type: String, unique: true, lowercase: true, trim: true },
     show_on_menu: { type: Boolean, default: false },
-    photo: { type: String },
-    banner: { type: String },
     created_at: { type: Date, default: Date.now }
 }, { timestamps: true });
 
