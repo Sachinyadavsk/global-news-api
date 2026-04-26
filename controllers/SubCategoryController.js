@@ -3,9 +3,7 @@ import SubCategory from "../models/SubCategory.js";
 //  Create SubCategory API
 export const createSubCategory = async (req, res) => {
     try {
-        let body = { ...req.body };
-
-        const subcategory = new SubCategory(body);
+        const subcategory = new SubCategory(req.body);
         const saved = await subcategory.save();
 
         res.status(201).json({
