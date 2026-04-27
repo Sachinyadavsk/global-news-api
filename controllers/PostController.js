@@ -122,15 +122,13 @@ export const getPostById = async (req, res) => {
 //  Get Post by Slug
 export const getPostBySlug = async (req, res) => {
     try {
-        const data = await Post.findOne({ slug: req.params.slug });
-
+       const data = await Post.findOne({ slug: req.params.slug });
         if (!data) {
             return res.status(404).json({
                 success: false,
                 message: "Post not found"
             });
         }
-
         res.json({
             success: true,
             data
