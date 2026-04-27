@@ -16,8 +16,7 @@ const router = express.Router();
 router.post("/posts", (req, res, next) => {
 
     upload.fields([
-        { name: "image_big", maxCount: 1 },
-        { name: "video_path", maxCount: 1 }
+        { name: "image_big", maxCount: 1 }
     ])(req, res, function (err) {
 
         if (err) {
@@ -36,8 +35,7 @@ router.get("/posts", getPosts);
 router.get("/posts/:id", getPostById);
 router.get("/post/slug/:slug", getPostBySlug);
 router.put("/posts/:id", upload.fields([
-    { name: "image_big", maxCount: 1 },
-    { name: "video_path", maxCount: 1 }
+    { name: "image_big", maxCount: 1 }
 ]), updatePost);
 router.delete("/posts/:id", deletePost);
 

@@ -16,15 +16,6 @@ const storage = new CloudinaryStorage({
                 resource_type: "image"
             };
         }
-
-        // 👉 VIDEO
-        if (file.fieldname === "video_path") {
-            return {
-                folder: "posts/videos",
-                resource_type: "video",
-                allowed_formats: ["mp4", "mov", "avi"]
-            };
-        }
     }
 });
 
@@ -55,10 +46,6 @@ export const createPost = async (req, res) => {
         if (req.files) {
             if (req.files.image_big) {
                 body.image_big = req.files.image_big[0].path; // Cloudinary URL
-            }
-
-            if (req.files.video_path) {
-                body.video_path = req.files.video_path[0].path; // Cloudinary URL
             }
         }
 
@@ -166,10 +153,6 @@ export const updatePost = async (req, res) => {
             if (req.files.image_big) {
                 body.image_big = req.files.image_big[0].path;
             }
-
-            if (req.files.video_path) {
-                body.video_path = req.files.video_path[0].path;
-            }
         }
 
         const updated = await Post.findByIdAndUpdate(
@@ -203,7 +186,6 @@ export const updatePost = async (req, res) => {
 export const deletePost = async (req, res) => {
     try {
         const post = await Post.findById(req.params.id);
-
         if (!post) {
             return res.status(404).json({
                 success: false,
@@ -218,20 +200,8 @@ export const deletePost = async (req, res) => {
                 await cloudinary.uploader.destroy(publicId);
             }
         }
-
-        //  Delete Video
-        if (post.video_path) {
-            const publicId = getPublicId(post.video_path);
-            if (publicId) {
-                await cloudinary.uploader.destroy(publicId, {
-                    resource_type: "video"
-                });
-            }
-        }
-
         //  Delete DB record
         await Post.findByIdAndDelete(req.params.id);
-
         res.json({
             success: true,
             message: "Post + media deleted successfully"
