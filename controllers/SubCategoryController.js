@@ -20,7 +20,7 @@ export const createSubCategory = async (req, res) => {
     }
 };
 
-//  Get All SubCategories
+//  Get All SubCategories with paginations
 export const getSubCategories = async (req, res) => {
     try {
         let { page = 1, limit = 5, search = "" } = req.query;
@@ -49,13 +49,32 @@ export const getSubCategories = async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            data: subCategories,
             pagination: {
                 total,
                 page,
                 limit,
                 totalPages: Math.ceil(total / limit)
-            }
+            },
+            data: subCategories
+        });
+
+    } catch (error) {
+        console.log("ERROR:", error);
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+//  Get All SubCategories
+export const getAllSubCategories = async (req, res) => {
+    try {
+        // Fetch paginated data
+        const subCategories = await SubCategory.find().sort({ createdAt: -1 });
+        return res.status(200).json({
+            success: true,
+            data: subCategories,
         });
 
     } catch (error) {
@@ -90,6 +109,32 @@ export const getByCategory = async (req, res) => {
 export const getSubCategoryById = async (req, res) => {
     try {
         const data = await SubCategory.findById(req.params.id);
+
+        if (!data) {
+            return res.status(404).json({
+                success: false,
+                message: "SubCategory not found"
+            });
+        }
+
+        res.json({
+            success: true,
+            data
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Error fetching subcategory",
+            error: error.message
+        });
+    }
+};
+
+//  Get Single SubCategory
+export const getSubCategorySlug = async (req, res) => {
+    try {
+        const data = await SubCategory.findOne({ slug: req.params.slug });
 
         if (!data) {
             return res.status(404).json({

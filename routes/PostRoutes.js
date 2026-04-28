@@ -6,7 +6,9 @@ import {
     getPostBySlug,
     updatePost,
     deletePost,
-    upload
+    upload,
+    getPostByCategoryId,
+    getPostCateWithSubById
 } from "../controllers/PostController.js";
 
 
@@ -33,7 +35,10 @@ router.post("/posts", (req, res, next) => {
 
 router.get("/posts", getPosts);
 router.get("/posts/:id", getPostById);
-router.get('/post/:slug', getPostBySlug);
+router.get("/post/:slug", getPostBySlug);
+router.get("/postcategory/:cateid", getPostByCategoryId);
+router.get("/postcatewithsub/:cateid/:subctid", getPostCateWithSubById);
+
 router.put("/posts/:id", upload.fields([
     { name: "image_big", maxCount: 1 }
 ]), updatePost);

@@ -66,6 +66,32 @@ export const getCategoryById = async (req, res) => {
     }
 };
 
+//  Get Single slug according get Category deatisl
+export const getCategoryBySlug = async (req, res) => {
+    try {
+        const data = await Category.findOne({ slug: req.params.slug });
+
+        if (!data) {
+            return res.status(404).json({
+                success: false,
+                message: "Category not found"
+            });
+        }
+
+        res.json({
+            success: true,
+            data
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Error fetching category",
+            error: error.message
+        });
+    }
+};
+
 //  Update Category
 export const updateCategory = async (req, res) => {
     try {
@@ -124,6 +150,6 @@ export const deleteCategory = async (req, res) => {
 };
 
 export const getCategoriesmenu = async (req, res) => {
-  const categories = await Category.find().sort({ category_order: 1 });
-  res.json(categories);
+    const categories = await Category.find().sort({ category_order: 1 });
+    res.json(categories);
 };

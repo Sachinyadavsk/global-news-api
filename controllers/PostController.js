@@ -122,7 +122,53 @@ export const getPostById = async (req, res) => {
 //  Get Post by Slug
 export const getPostBySlug = async (req, res) => {
     try {
-       const data = await Post.findOne({ slug: req.params.slug });
+        const data = await Post.findOne({ slug: req.params.slug });
+        if (!data) {
+            return res.status(404).json({
+                success: false,
+                message: "Post not found"
+            });
+        }
+        res.json({
+            success: true,
+            data
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+// category id according get post details
+export const getPostByCategoryId = async (req, res) => {
+    try {
+        const data = await Post.find({ category_id: req.params.cateid });
+        if (!data) {
+            return res.status(404).json({
+                success: false,
+                message: "Post not found"
+            });
+        }
+        res.json({
+            success: true,
+            data
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+// category id with subcategory id according get post details
+export const getPostCateWithSubById = async (req, res) => {
+    try {
+        const data = await Post.find({ category_id: req.params.cateid, subcategories_id: req.params.subctid });
         if (!data) {
             return res.status(404).json({
                 success: false,
